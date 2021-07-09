@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>The Music Encyclopedia</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <!-- Call Vue.js via CDN for templating -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <!-- Call the Vue.js router via unpkg -->
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <!-- Call Axios via CDN for API calls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <!--Custom js and css-->
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital@1&display=swap" rel="stylesheet">
+    <!--Font Awesome -->
+    <script src="https://kit.fontawesome.com/ea0580a04a.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Beginning of block of template code with the ID of 'app'. The <template> tag doesn't do anything except block the W3C validators -->
+    <div id="app">
+        <template>
+            
+            <!-- Did something go wrong? The message below will display. Check the Console to see what the error
+            message is, as well. -->
+            <section v-if="!info">
+                <h1 class="title">The Music Encyclopedia</h1>
+                
+                <div class="intro">
+                    <p>This web app allows you to search your favorite artists and displays information about them.</p>
+                    <p>It recalls data from the Last.fm API that can be found <a href="https://www.last.fm/api/" target="_blank">here.</a></p>
+                    <p>Start searching for your favorite artists in the search bar below.</p>
+                </div>
+                
+                <div class="searchBar">    
+                    <input type="text" id="search" type="text"> 
+                    <button onclick="searchArtist();" class="submit"><a id="submitInfo"><i class="fas fa-search"></i></a></button>
+               </div>
+                <p>Sorry, there is no record of the artist in the Encyclopedia.</p>
+            </section>
+            
+            <section v-if="errored">
+                <h1 class="title">The Music Encyclopedia</h1>
+                
+                <div class="intro">
+                    <p>This web app allows you to search your favorite artists and displays information about them.</p>
+                    <p>It recalls data from the Last.fm API that can be found <a href="https://www.last.fm/api/" target="_blank">here.</a></p>
+                    <p>Start searching for your favorite artists in the search bar below.</p>
+                </div>
+                
+                <div class="searchBar">    
+                    <input type="text" id="search" type="text"> 
+                    <button onclick="searchArtist();"><a id="submitInfo"><i class="fas fa-search"></i></a></button>
+               </div>
+                
+                <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
+            </section>
+            
+            <section v-if="info">
+                <h1 class="title">The Music Encyclopedia</h1>
+                
+                <div class="intro">
+                    <p>This web app allows you to search your favorite artists and displays information about them.</p>
+                    <p>It recalls data from the Last.fm API that can be found <a href="https://www.last.fm/api/" target="_blank" class="myLink">here.</a></p>
+                    <p>Start searching for your favorite artists in the search bar below.</p>
+                </div>
+                
+                <div class="searchBar">    
+                    <input type="text" id="search" type="text"> 
+                    <button onclick="searchArtist();"><a id="submitInfo"><i class="fas fa-search"></i></a></button>
+                    <p id="emptySearch"></p>
+               </div>
+            <hr>
+               
+                <div id="myResults">
+                    <h2 class="name">{{ info.data.artist.name }}</h2>
+
+                    <a v-bind:href="info.data.artist.url" target="_blank" class="link">Visit official Last.fm site.</a>
+
+                    <p>Listeners: <span>{{ info.data.artist.stats.listeners}}</span></p>
+
+                    <p>Playcount: <span>{{ info.data.artist.stats.playcount }}</span></p>
+
+                    <p class="similar">Similar Artists:</p>
+                    <a v-bind:href="info.data.artist.similar.artist[0].url" target="_blank"> {{ info.data.artist.similar.artist[0].name}}, </a>
+                    <a v-bind:href="info.data.artist.similar.artist[1].url" target="_blank"> {{ info.data.artist.similar.artist[1].name}}, </a>
+                    <a v-bind:href="info.data.artist.similar.artist[2].url" target="_blank"> {{ info.data.artist.similar.artist[2].name}}, </a>
+                    <a v-bind:href="info.data.artist.similar.artist[3].url" target="_blank"> {{ info.data.artist.similar.artist[3].name}} </a>
+
+                    <p class="similar">Tags: </p>
+                    <a v-bind:href="info.data.artist.tags.tag[0].url" target="_blank">{{ info.data.artist.tags.tag[0].name }}, </a>
+                    <a v-bind:href="info.data.artist.tags.tag[1].url" target="_blank">{{ info.data.artist.tags.tag[1].name }}, </a>
+                    <a v-bind:href="info.data.artist.tags.tag[2].url" target="_blank">{{ info.data.artist.tags.tag[2].name }}, </a>
+                    <a v-bind:href="info.data.artist.tags.tag[3].url" target="_blank">{{ info.data.artist.tags.tag[3].name }} </a>
+                <hr>
+                <div class="intro">
+                    <p>NOTE: We are sorry to inform you that Last.fm has limited the use or of artwork through this API.</p>
+                    <p><a href="https://getsatisfaction.com/lastfm/topics/api-announcement-dac8oefw5vrxq" target="_blank" class="myLink">Read More...</a></p>
+                </div>    
+                    
+                    <p class="similar name" >According to Last.fm data: </p>
+                    <p class="summary">{{ info.data.artist.bio.content }}</p>
+                </div>
+                
+                <!--<pre>{{ info }}</pre>-->
+            </section>
+        </template>
+    </div>
+
+    <!-- Block of code that makes the API call, then puts the data into an object called 'info'
+    and finally, allows use of the data in an HTML object with the ID of 'app'. -->
+    <script>
+        var router = new VueRouter({
+            mode: 'history',
+            routes: []
+        });
+        new Vue({
+            el: '#app',
+            router,
+            data() {
+                return {
+                    info: null,
+                    loading: true,
+                    errored: false
+                }
+            },
+            mounted() {
+                axios
+                    // OPTION 1 (DEFAULT)
+                    // NASA Astronomy Picture of the Day - https://api.nasa.gov/
+                    // Feel free to borrow my api_key for now but in the long run,
+                    // you should go to https://api.nasa.gov/ and get your own!
+                    // They are free.
+                    
+                    //.get("https://api.nasa.gov/planetary/apod?api_key=dJvbzNnl8WxP1e1amwx0t2zIb39aCZOciWlgdzG4")
+                
+                    // OPTION 1.1
+                    // NASA Astronomy Picture of the Day by Date
+                    // Same as the previous but it requires a query string in the URL called date
+                    // in YYYY-MM-DD format
+                
+                    // .get("https://api.nasa.gov/planetary/apod?api_key=dJvbzNnl8WxP1e1amwx0t2zIb39aCZOciWlgdzG4&date=" + this.$route.query.date)
+                
+                    // OPTION 2
+                    // MERRIAM WEBSTER DICTIONARY - https://dictionaryapi.com/products/json
+                    // This one requires a query string in the URL called word
+                    // which is the word you want a definition for
+                    // Feel free to borrow my API key for now, but get your own at
+                    // https://dictionaryapi.com/
+                    // Depending on how much detail you want, this one could be challenging!
+                    // Refer to the documentation
+                
+                    // .get("https://dictionaryapi.com/api/v3/references/collegiate/json/" + this.$route.query.word + "?key=fecdee74-1de2-45aa-b460-85c1238457d5") 
+                
+                
+                    // OPTION 3
+                    // WEATHERBIT.IO - https://www.weatherbit.io/api/weather-current
+                    // This one requires a query string in the URL called zip
+                    // which will return the current weather for that zip code
+                    // Get your own API key at http://weatherbit.io
+                
+                    // .get("https://api.weatherbit.io/v2.0/current?key=a3f927c5a5414b9ca4e6f89c3436e4f8&units=I&country=US&postal_code=" + this.$route.query.zip)
+                
+                    // OPTION 4
+                    // STUDIO GHIBLI FILMS - https://ghibliapi.herokuapp.com/
+                    // This one returns all of the films from Studio Ghibli
+                    // No API key needed! It's completely open.
+                    // This one is one of those APIs that returns OTHER API CALLS
+                    // as values for the deeper data, but you can use the upper level
+                    // data just fine
+                    // .get("https://ghibliapi.herokuapp.com/films")
+                
+                    // OPTION 5
+                    // OPEN MOVIE DATABASE - http://www.omdbapi.com/
+                    // This one requires a query string in the URL called title
+                    // which will return data on movies based on their title
+                    // Please sign up for your own API key at omdbapi.com
+                    // .get("http://www.omdbapi.com/?apikey=f5c3bb72&t=" + this.$route.query.title)
+                
+                
+                    // OPTION 6
+                    // LAST FM - https://www.last.fm/api/
+                    // This one requires a query string in the URL called artist
+                    // which will return biographical info and images of whatever artist
+                    // you search for!
+                
+                     .get("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=222ccaa67336571042de27021261b708&format=json&artist=" + this.$route.query.artist)
+                
+                    // The line below helps us put the pertinent data from the call into the
+                    // info object. Specifically, we only need what's in the items part of
+                    // the API response
+                
+                    .then(response => {
+                        this.info = response
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.errored = true
+                    })
+                    .finally(() => this.loading = false)
+            }
+        })
+
+    </script>
+</body>
+
+</html>

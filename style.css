@@ -1,0 +1,104 @@
+body {
+    font-size: 1em;
+    margin: 0;
+    padding: 50px;
+    background-color: #222930;
+    color: #E9E9E9;
+    font-family: 'Nunito Sans', sans-serif;
+}
+.summary {
+    text-align: justify;
+}
+.title {
+    text-align: center;
+    padding-bottom: 30px;
+    color: #4EB1BA;
+    font-size: 2em;
+}
+.searchBar {
+    width: 80%;
+    padding-right: 10px;
+    margin-left: auto;
+    padding: 1.3em 0 1.3em 0;
+}
+#submitInfo {
+    margin: 0px;
+}
+#search {
+    width: 10em;
+    border: 1px solid #4EB1BA;
+    background-color: #E9E9E9;
+}
+
+.intro {
+    width: 80%;
+    background-color: #4EB1BA;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 1px 1px 2px #E9E9E9;
+}
+p {
+    padding-left: 5px;
+}
+hr {
+    height: 2px;
+    background-color: #4EB1BA;
+    border: none;
+}
+button {
+    color: #E9E9E9;
+    background-color: #4EB1BA;
+    border: none;
+    padding: 3px;
+    border-radius: 6px;
+}
+.name {
+    color: #4EB1BA;
+    padding-top: 40px;
+}
+span {
+    color: #4EB1BA;
+    font-weight: bolder;
+}
+.similar {
+    padding-top: 40px;
+}
+a {
+    text-decoration: none;
+    color: #E9E9E9;
+    font-style: italic;
+    margin-right: 10px;
+}
+a:hover {
+    color: #4EB1BA;
+}
+.myLink:hover {
+    color: #222930;
+}
+
+/* TABLET */
+@media only screen and (min-width: 768px) {
+    body {
+        margin-right: 3em;
+        margin-left: 3em;
+    }
+    .intro {
+        width: 55%;
+    }
+    .searchBar {
+        width: 60%
+    }
+}
+
+/* DESKTOP */
+@media only screen and (min-width:1024px) {
+    body {
+        margin-right: 8em;
+        margin-left: 8em;
+    }
+    .intro {
+        width: 40%;
+    }
+}
